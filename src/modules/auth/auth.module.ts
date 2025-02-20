@@ -24,7 +24,7 @@ import { UsersModule } from '../users/users.module';
     }),
   ],
   providers: [AuthService, JwtAuthGuard, JwtStrategy], // ✅ Registramos `JwtStrategy`
-  exports: [AuthService, JwtAuthGuard],
+  exports: [AuthService, JwtAuthGuard, JwtStrategy],
   controllers: [AuthController],
 })
 export class AuthModule { }

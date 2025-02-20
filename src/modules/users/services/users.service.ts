@@ -17,6 +17,12 @@ export class UsersService {
     private readonly usuarioRolRepository: Repository<UsuarioRol>, // ✅ Agregar repositorio de UsuarioRol
   ) { }
 
+  async obtenerUsuarios(): Promise<Usuario[]> {
+    return this.usuarioRepository.find({
+      relations: ['roles', 'roles.rol'], // ✅ Incluir los roles en la respuesta
+    });
+  }
+
   async crearUsuario(
     nombre: string,
     username: string,
@@ -58,7 +64,7 @@ export class UsersService {
   }
 
   async buscarUsuarioPorUsername(username: string): Promise<Usuario | null> {
-    return this.usuarioRepository.findOne({ where: { username }, relations: ['roles'] });
+    return this.usuarioRepository.findOne({ where: { username }, relations: ['roles', 'roles.rol'] });
   }
 
   async asignarRol(usuarioId: string, rolNombre: string, usuCre: string) {

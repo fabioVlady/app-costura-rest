@@ -7,12 +7,17 @@ import { CreateUserDto } from '../dto/create-user.dto';
 import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
 
 @Controller('users')
-@UseGuards(RolesGuard, JwtAuthGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
 
+  @Get()
+  @Roles('Admin', 'Moderador') // ✅ Solo Admin y Moderador pueden ver la lista de usuarios
+  async obtenerUsuarios(): Promise<Usuario[]> {
+    return this.usersService.obtenerUsuarios();
+  }
+
   @Post('create')
-  @Roles('admin', 'moderador') // ✅ Solo Admin y Moderador pueden crear usuarios
+  // @Roles('admin', 'moderador') // ✅ Solo Admin y Moderador pueden crear usuarios
   async crearUsuario(
     @Req() req,
     @Body(new ValidationPipe({ transform: true })) createUserDto: CreateUserDto, // ✅ Validación automática con DTO
