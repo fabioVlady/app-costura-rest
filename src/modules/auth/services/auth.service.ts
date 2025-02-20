@@ -6,12 +6,14 @@ import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
 import { Sesion } from '../entities/sesion.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { TokenBlacklistService } from './token-blacklist.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
+    private readonly tokenBlacklistService: TokenBlacklistService,
     @InjectRepository(Sesion)
     private readonly sesionRepository: Repository<Sesion>,
   ) { }
@@ -45,13 +47,23 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
-  async logout(refreshToken: string) {
+  async logout(accessToken: string, refreshToken: string) {
     const sesion = await this.sesionRepository.findOne({ where: { token: refreshToken } });
     if (!sesion) throw new UnauthorizedException('Token inválido');
 
+    // 1️⃣ Obtener tiempo restante de expiración del `accessToken`
+    const decoded = this.jwtService.decode(accessToken) as any;
+    const expiresIn = decoded.exp - Math.floor(Date.now() / 1000);
+
+    // 2️⃣ Agregar el `accessToken` a la blacklist
+    await this.tokenBlacklistService.addToBlacklist(accessToken, expiresIn);
+
+    // 3️⃣ Eliminar la sesión de la base de datos
     await this.sesionRepository.delete(sesion.id);
+
     return { message: 'Sesión cerrada correctamente' };
   }
+
 
   async refreshToken(oldToken: string) {
     const sesion = await this.sesionRepository.findOne({ where: { token: oldToken } });

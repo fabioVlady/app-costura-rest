@@ -8,6 +8,7 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { Sesion } from './entities/sesion.entity';
 import { UsersModule } from '../users/users.module';
+import { TokenBlacklistService } from './services/token-blacklist.service';
 
 @Module({
   imports: [
@@ -23,8 +24,8 @@ import { UsersModule } from '../users/users.module';
       }),
     }),
   ],
-  providers: [AuthService, JwtAuthGuard, JwtStrategy], // ✅ Registramos `JwtStrategy`
-  exports: [AuthService, JwtAuthGuard, JwtStrategy],
+  providers: [AuthService, JwtAuthGuard, JwtStrategy, TokenBlacklistService], // ✅ Registramos `JwtStrategy`
+  exports: [AuthService, JwtAuthGuard, JwtStrategy, TokenBlacklistService],
   controllers: [AuthController],
 })
 export class AuthModule { }
