@@ -10,7 +10,7 @@ export class CreateUserDto {
   username: string;
 
   @IsString()
-  @MinLength(6)
+  @MinLength(6, { message: 'La contraseña debe tener al menos 6 caracteres' })
   password: string;
 
   @IsEmail()

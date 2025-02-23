@@ -15,7 +15,7 @@ export class UsuarioRol extends BaseApiEntity {
   rol: Rol;
 
   constructor(usuario: Usuario, rol: Rol, usuCre: string) {
-    super('CREADO', 'CREAR', usuCre);
+    super('ACTIVO', 'ACTIVAR', usuCre);
     this.usuario = usuario;
     this.rol = rol;
   }
