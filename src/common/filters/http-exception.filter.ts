@@ -23,9 +23,32 @@ export class HttpExceptionFilter<T> implements ExceptionFilter {
 
     // ✅ Capturar errores de PostgreSQL (TypeORM)
     if (exception instanceof QueryFailedError) {
-      if ((exception as any).code === '23505') {
-        status = HttpStatus.CONFLICT; // 409 Conflict
-        message = (exception as any).detail; // 🔥 Extraer el detalle de la clave duplicada
+      const ex = exception as any;
+      switch (ex.code) {
+        case '23505': // 🔹 Violación de restricción UNIQUE
+          status = HttpStatus.CONFLICT; // 409 Conflict
+          message = ex.detail || 'Clave duplicada detectada';
+          break;
+
+        case '23502': // 🔹 Columna con restricción NOT NULL está en NULL
+          status = HttpStatus.CONFLICT; // 400 Bad Request
+          message = `El campo ${ex.column} de la tabla ${ex.table} no puede ser nulo`;
+          break;
+
+        case '23503': // 🔹 Violación de clave foránea (FK)
+          status = HttpStatus.BAD_REQUEST; // 400 Bad Request
+          message = 'La relación con otra tabla no es válida';
+          break;
+
+        case '23514': // 🔹 Violación de restricción CHECK
+          status = HttpStatus.BAD_REQUEST; // 400 Bad Request
+          message = 'El valor ingresado no cumple con las reglas de validación';
+          break;
+
+        default:
+          status = HttpStatus.INTERNAL_SERVER_ERROR;
+          message = 'Error interno del servidor TypeORM';
+          break;
       }
     }
 
