@@ -13,7 +13,7 @@ export class ClientesService {
   ) { }
 
   async listarClientes(): Promise<Cliente[]> {
-    return this.clienteRepository.find({ where: { apiEstado: 'ACTIVO' } });
+    return this.clienteRepository.find();
   }
 
   async crearCliente(dto: CreateClienteDto, usuario: string): Promise<Cliente> {

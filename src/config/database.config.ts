@@ -9,7 +9,7 @@ export const databaseConfig = (configService: ConfigService): TypeOrmModuleOptio
   password: configService.get<string>('DB_PASS', 'password'),
   database: configService.get<string>('DB_NAME', 'app_db'),
   autoLoadEntities: true, // Carga todas las entidades automáticamente
-  synchronize: true, // Solo en desarrollo, en producción usar migrations
+  synchronize: false, // Solo en desarrollo, en producción usar migrations
   logging: configService.get<boolean>('DB_LOGG', false),
   ssl: {
     rejectUnauthorized: false, // 🔹 Permite conexión sin verificación de certificado
