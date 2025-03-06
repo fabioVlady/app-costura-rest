@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, OnModuleInit } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -10,6 +10,8 @@ import { SecurityModule } from './modules/security/security.module';
 import { CategoriasModule } from './modules/categorias/categorias.module';
 import { ClientesModule } from './modules/clientes/clientes.module';
 import { MaquinasModule } from './modules/maquinas/maquinas.module';
+import { EnumService } from './common/services/enum.service';
+import { EnumController } from './common/controllers/enum.controller';
 
 @Module({
   imports: [
@@ -29,5 +31,14 @@ import { MaquinasModule } from './modules/maquinas/maquinas.module';
     ClientesModule,
     MaquinasModule,
   ],
+  providers: [EnumService],
+  controllers: [EnumController],
+  exports: [EnumService],
 })
-export class AppModule { }
+export class AppModule implements OnModuleInit {
+  constructor(private readonly enumService: EnumService) { }
+
+  async onModuleInit() {
+    await this.enumService.cargarEnums(); // 📌 Cargar ENUMs al iniciar la app
+  }
+}

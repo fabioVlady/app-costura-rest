@@ -7,7 +7,7 @@ export class Maquina extends BaseApiEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'varchar', length: 50, name: 'tipo_maquina' })
   tipoMaquina: string;
 
   @Column({ type: 'varchar', length: 100 })
@@ -18,4 +18,5 @@ export class Maquina extends BaseApiEntity {
 
   @Column({ type: 'int', default: 0 })
   mantenimiento: number;
+
 }
