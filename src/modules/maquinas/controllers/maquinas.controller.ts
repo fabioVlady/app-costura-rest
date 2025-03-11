@@ -3,6 +3,7 @@ import { MaquinasService } from '../services/maquinas.service';
 import { Roles } from 'src/modules/security/decorators/roles.decorator';
 import { CreateMaquinaDto } from '../dto/create-maquina.dto';
 import { UpdateMaquinaDto } from '../dto/update-maquina.dto';
+import { EnumService } from 'src/common/services/enum.service';
 
 @Controller('maquinas')
 export class MaquinasController {

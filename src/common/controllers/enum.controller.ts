@@ -7,7 +7,7 @@ export class EnumController {
 
   @Get()
   async obtenerEnums() {
-    return this.enumService.obtenerValoresEnum('tipo_maquina'); // Ejemplo para un solo ENUM
+    return this.enumService.getEnums(); // Ejemplo para un solo ENUM
   }
 
   @Post('refresh')

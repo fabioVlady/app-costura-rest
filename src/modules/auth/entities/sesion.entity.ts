@@ -1,5 +1,5 @@
 import { Usuario } from 'src/modules/users/entities/usuario.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, JoinColumn } from 'typeorm';
 
 @Entity({ schema: 'seguridad', name: 'sesion' })
 export class Sesion {
@@ -7,6 +7,7 @@ export class Sesion {
   id: string;
 
   @ManyToOne(() => Usuario, { onDelete: 'CASCADE' }) // ✅ Eliminamos la referencia inversa
+  @JoinColumn({ name: 'usuario_id' })
   usuario: Usuario;
 
   @Column({ type: 'varchar', length: 500 })
@@ -15,13 +16,13 @@ export class Sesion {
   @Column({ type: 'varchar', length: 45, nullable: true })
   ip?: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'text', nullable: true, name: 'user_agent' })
   userAgent?: string;
 
   @Column({ type: 'boolean', default: true })
   activo: boolean;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: 'timestamp', name: 'fec_expira' })
   fecExpira: Date;
 
   @CreateDateColumn({ name: 'fec_cre' })

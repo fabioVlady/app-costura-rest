@@ -35,10 +35,4 @@ import { EnumController } from './common/controllers/enum.controller';
   controllers: [EnumController],
   exports: [EnumService],
 })
-export class AppModule implements OnModuleInit {
-  constructor(private readonly enumService: EnumService) { }
-
-  async onModuleInit() {
-    await this.enumService.cargarEnums(); // 📌 Cargar ENUMs al iniciar la app
-  }
-}
+export class AppModule { }

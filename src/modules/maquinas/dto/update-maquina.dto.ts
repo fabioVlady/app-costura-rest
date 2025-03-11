@@ -1,10 +1,12 @@
 import { IsOptional, IsString, MaxLength, IsIn, IsNumber } from 'class-validator';
+import { IsEnumValid } from 'src/common/validators/IsEnumValid';
 
 export class UpdateMaquinaDto {
 
   @IsOptional()
   @IsString()
   @MaxLength(50)
+  @IsEnumValid('tipo_maquina')
   tipoMaquina?: string;
 
   @IsOptional()

@@ -15,7 +15,7 @@ export class Cliente extends BaseApiEntity {
   @Column({ type: 'text', nullable: true })
   descripcion?: string;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'timestamp', nullable: true, name: 'fec_nac' })
   fecNac?: Date;
 
   @Column({ type: 'text', nullable: true })

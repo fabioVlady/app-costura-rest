@@ -16,7 +16,7 @@ export class MantenimientoMaquina extends BaseApiEntity {
   @Column({ type: 'uuid', name: 'maquina_id' })
   maquinaId: string;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: 'timestamp', name: 'fec_realizado' })
   fecRealizado: Date;
 
   @Column({ type: 'varchar', length: 50 })

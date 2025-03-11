@@ -102,6 +102,9 @@ export class UsersService {
   ): Promise<Usuario> {
     // 1️⃣ Obtener roles de la BD
     const roles = await this.rolRepository.find({ where: { id: In(rolIds) } });
+    if (!roles || roles.length !== rolIds.length) {
+      throw new NotFoundException('El o los roles no existen para asignar');
+    }
     // 2️⃣ Validar que el Moderador no pueda asignar Admin
     if (usuCre.roles.includes['Moderador']) {
       const rolesNoPermitidos = roles.filter(rol => rol.nombre === 'Admin');
@@ -120,6 +123,7 @@ export class UsersService {
       password: hashedPassword,
       email,
       usuCre: usuCre.username,
+      fecCre: new Date()
     });
 
     await this.usuarioRepository.save(usuario);

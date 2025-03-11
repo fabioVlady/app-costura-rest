@@ -1,13 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
-import { ENUMS } from '../constants/enums';
 
 @Injectable()
-export class EnumService {
-  private enums: Map<string, string[]> = new Map(); // 📌 Almacenar ENUMs en memoria
+export class EnumService implements OnModuleInit {
+  static ENUMS: Record<string, string[]> = {};
 
   constructor(@InjectDataSource() private dataSource: DataSource) { }
+
+  async onModuleInit() { // Se ejecuta al iniciar la aplicación
+    await this.cargarEnums();
+  }
 
   async cargarEnums(): Promise<void> {
     const resultado = await this.dataSource.query(`
@@ -19,14 +22,17 @@ export class EnumService {
       GROUP BY t.typname;
     `);
 
+    EnumService.ENUMS = {}; // Resetear antes de cargar nuevos valores
     resultado.forEach(row => {
-      ENUMS[row.nombre_enum] = row.valores.split(',');
+      EnumService.ENUMS[row.nombre_enum] = row.valores.split(',');
     });
 
-    console.log('📌 ENUMs cargados:', ENUMS);
+    console.log('onmoduleinit ENUMs cargados:', EnumService.ENUMS);
   }
-
-  obtenerValoresEnum(nombreEnum: string): string[] {
-    return ENUMS[nombreEnum] || [];
+  static getEnumValues(enumName: string): string[] {
+    return EnumService.ENUMS[enumName] ?? [];
+  }
+  getEnums(): Record<string, string[]> {
+    return EnumService.ENUMS;
   }
 }
